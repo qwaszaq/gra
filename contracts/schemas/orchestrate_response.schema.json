@@ -1,0 +1,12 @@
+{
+  "$id": "orchestrate_response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["narration"],
+  "properties": {
+    "narration": { "type": "string" },
+    "image": { "type": ["string", "null"] },
+    "music": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

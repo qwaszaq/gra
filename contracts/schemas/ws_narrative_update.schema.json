@@ -1,0 +1,18 @@
+{
+  "$id": "ws_narrative_update.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["type", "session_id", "turn_id", "text"],
+  "properties": {
+    "type": { "const": "narrative_update" },
+    "contract_version": { "type": "string", "default": "1.0.0" },
+    "session_id": { "type": "string" },
+    "turn_id": { "type": "integer" },
+    "text": { "type": "string" },
+    "image": { "type": ["string", "null"] },
+    "voice_audio": { "type": ["string", "null"] },
+    "music": { "type": ["string", "null"] },
+    "timestamp": { "type": "string" }
+  },
+  "additionalProperties": false
+}

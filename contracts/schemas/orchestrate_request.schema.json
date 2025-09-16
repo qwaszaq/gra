@@ -1,0 +1,14 @@
+{
+  "$id": "orchestrate_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["game_state", "actions"],
+  "properties": {
+    "game_state": { "type": "object" },
+    "actions": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    }
+  },
+  "additionalProperties": false
+}

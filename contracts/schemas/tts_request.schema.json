@@ -1,0 +1,12 @@
+{
+  "$id": "tts_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["text", "turn_id", "session_id"],
+  "properties": {
+    "text": { "type": "string" },
+    "turn_id": { "type": "integer" },
+    "session_id": { "type": "string" }
+  },
+  "additionalProperties": false
+}

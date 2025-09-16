@@ -1,0 +1,15 @@
+{
+  "$id": "ws_login.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["type", "player", "session_id"],
+  "properties": {
+    "type": { "const": "login" },
+    "contract_version": { "type": "string", "default": "1.0.0" },
+    "player": { "type": "string", "minLength": 2, "maxLength": 32 },
+    "session_id": { "type": "string", "minLength": 1, "maxLength": 64 },
+    "timestamp": { "type": "string" },
+    "request_id": { "type": "string" }
+  },
+  "additionalProperties": false
+}

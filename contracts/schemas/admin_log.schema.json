@@ -1,0 +1,15 @@
+{
+  "$id": "admin_log.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["session_id", "turn", "actions", "text"],
+  "properties": {
+    "session_id": { "type": "string" },
+    "turn": { "type": "integer" },
+    "actions": { "type": "object" },
+    "text": { "type": "string" },
+    "image": { "type": ["string", "null"] },
+    "audio": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

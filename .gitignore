@@ -1,0 +1,12 @@
+__pycache__/
+*.pyc
+.env
+.DS_Store
+.venv/
+data/redis/
+data/admin_db/
+data/admin_logs/
+data/audio/
+data/images/
+data/music/
+# jeśli chcesz trzymać scenariusze w repo, nie ignoruj scenarios/

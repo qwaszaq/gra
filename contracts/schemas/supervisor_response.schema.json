@@ -1,0 +1,17 @@
+{
+  "$id": "supervisor_response.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["valid"],
+  "properties": {
+    "valid": { "type": "boolean" },
+    "mapped_action": {
+      "type": ["string", "null"],
+      "enum": ["investigate", "interrogate", "move", "report", null]
+    },
+    "target": { "type": ["string", "null"] },
+    "summary": { "type": ["string", "null"] },
+    "reason": { "type": ["string", "null"] }
+  },
+  "additionalProperties": false
+}

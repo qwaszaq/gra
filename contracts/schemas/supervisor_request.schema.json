@@ -1,0 +1,11 @@
+{
+  "$id": "supervisor_request.schema.json",
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["player", "input"],
+  "properties": {
+    "player": { "type": "string" },
+    "input": { "type": "string", "minLength": 1, "maxLength": 500 }
+  },
+  "additionalProperties": false
+}
