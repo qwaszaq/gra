@@ -1,0 +1,194 @@
+{% extends "base.html" %}
+
+{% block title %}Sesja {{ session.session_id }} - Admin Panel{% endblock %}
+{% block page_title %}Sesja: {{ session.session_id }}{% endblock %}
+
+{% block content %}
+<!-- Session Info -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-info-circle"></i>
+                    Informacje o Sesji
+                </h6>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>ID Sesji:</strong></td>
+                                <td>{{ session.session_id }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Status:</strong></td>
+                                <td>
+                                    {% if session.status == 'active' %}
+                                        <span class="badge bg-success">Aktywna</span>
+                                    {% elif session.status == 'completed' %}
+                                        <span class="badge bg-primary">Zakończona</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Porzucona</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            <tr>
+                                <td><strong>Scenariusz:</strong></td>
+                                <td>{{ session.scenario or 'N/A' }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Liczba graczy:</strong></td>
+                                <td>{{ session.player_count }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    <div class="col-md-6">
+                        <table class="table table-borderless">
+                            <tr>
+                                <td><strong>Utworzona:</strong></td>
+                                <td>{{ session.created_at.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Ostatnia aktywność:</strong></td>
+                                <td>{{ session.last_activity.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Liczba tur:</strong></td>
+                                <td>{{ turns|length }}</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Łączna liczba akcji:</strong></td>
+                                <td>{{ turns|sum(attribute='actions_count') }}</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Turns -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-play"></i>
+                    Tury Gry
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if turns %}
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Nr</th>
+                                <th>ID Tury</th>
+                                <th>Rozpoczęta</th>
+                                <th>Zakończona</th>
+                                <th>Status</th>
+                                <th>Akcje</th>
+                                <th>Narracja</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for turn in turns %}
+                            <tr>
+                                <td>{{ turn.turn_number }}</td>
+                                <td>{{ turn.turn_id }}</td>
+                                <td>{{ turn.started_at.strftime('%H:%M:%S') }}</td>
+                                <td>
+                                    {% if turn.completed_at %}
+                                        {{ turn.completed_at.strftime('%H:%M:%S') }}
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    {% if turn.status == 'active' %}
+                                        <span class="badge bg-success">Aktywna</span>
+                                    {% elif turn.status == 'completed' %}
+                                        <span class="badge bg-primary">Zakończona</span>
+                                    {% else %}
+                                        <span class="badge bg-warning">Timeout</span>
+                                    {% endif %}
+                                </td>
+                                <td>{{ turn.actions_count }}</td>
+                                <td>
+                                    {% if turn.narrative_generated == 'true' %}
+                                        <span class="badge bg-success">Tak</span>
+                                    {% else %}
+                                        <span class="badge bg-secondary">Nie</span>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-muted">Brak tur w tej sesji</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logs -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-list"></i>
+                    Logi Sesji
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if logs %}
+                <div class="log-entries">
+                    {% for log in logs %}
+                    <div class="log-entry {{ log.level }} mb-3 p-3 bg-light rounded">
+                        <div class="d-flex justify-content-between align-items-start">
+                            <div>
+                                <span class="badge bg-{{ 'info' if log.level == 'info' else 'warning' if log.level == 'warning' else 'danger' }}">
+                                    {{ log.level.upper() }}
+                                </span>
+                                <span class="badge bg-secondary">{{ log.service }}</span>
+                                {% if log.turn_id %}
+                                    <span class="badge bg-primary">{{ log.turn_id }}</span>
+                                {% endif %}
+                            </div>
+                            <small class="text-muted">{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</small>
+                        </div>
+                        <p class="mb-0 mt-2">{{ log.message }}</p>
+                        {% if log.player %}
+                        <small class="text-muted">
+                            <i class="fas fa-user"></i>
+                            {{ log.player }}
+                            {% if log.action %}
+                                - {{ log.action }}
+                            {% endif %}
+                        </small>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-muted">Brak logów dla tej sesji</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

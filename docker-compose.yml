@@ -1,0 +1,234 @@
+version: '3.8'
+
+services:
+  traefik:
+    image: traefik:v3.0
+    command:
+      - "--providers.docker=true"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.le.acme.httpchallenge=true"
+      - "--certificatesresolvers.le.acme.httpchallenge.entrypoint=web"
+      - "--certificatesresolvers.le.acme.email=${TRAEFIK_ACME_EMAIL}"
+      - "--certificatesresolvers.le.acme.storage=/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
+      - "./data/traefik/acme.json:/acme.json"
+    restart: unless-stopped
+    profiles:
+      - traefik
+    networks:
+      - game_network
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - ./data/redis:/data
+    networks:
+      - game_network
+
+  game_server:
+    build: ./services/game_server
+    ports:
+      - "65432:65432"
+    environment:
+      - REDIS_URL=redis://redis:6379
+      - SCENARIO=ai
+      - PUBLIC_TTS_BASE=http://localhost:8001
+      - PUBLIC_VISION_BASE=http://localhost:8004
+      - PUBLIC_AI_BASE=http://localhost:8003
+      - ADMIN_TOKEN=dev_admin_token_123
+      - TURN_TIMEOUT_SECONDS=15
+      - SINGLE_PLAYER_DEFAULT=1
+      - BOT_NAME=PartnerBot
+      - BOT_THINK_MS=300
+      - BOT_PERSONA=ostrożny śledczy
+      - AI_BOT_URL=http://ai_orchestrator:8003/bot_action
+      - STORY_MODE=1
+      - STORY_NL_MODE=1
+      - STORY_URL=http://ai_orchestrator:8003/story_step
+    volumes:
+      - ./scenarios:/app/scenarios
+      - ./data/audio:/app/audio
+    depends_on:
+      - redis
+      - tts_service
+      - vision_selector
+      - ai_orchestrator
+    networks:
+      - game_network
+
+  tts_service:
+    build: ./services/tts_service
+    ports:
+      - "8001:8001"
+    environment:
+      - PUBLIC_TTS_BASE=http://localhost:8001
+      - TTS_CACHE=1
+      - PIPER_BIN=/app/bin/piper
+      - PIPER_VOICE=/app/voices/pl.onnx
+      - ELEVEN_API_KEY=sk_d26a636fa9704422c650bfa57b34a48425a14954aa2864c7c
+      - ELEVEN_VOICE_ID=
+    volumes:
+      - ./data/audio:/app/audio
+      - ./data/voices:/app/voices
+      - ./data/bin:/app/bin
+    networks:
+      - game_network
+
+  admin_service:
+    build: ./services/admin_service
+    ports:
+      - "8002:8002"
+    environment:
+      - DATABASE_URL=sqlite:////app/data/logs.db
+      - ADMIN_TOKEN=dev_admin_token_123
+      - ADMIN_BASE=http://localhost:8002
+      - VISION_PUBLIC_BASE=http://vision_selector:8004
+      - GAME_SERVER_INTERNAL_BASE=http://game_server:65432
+      - WEB_CLIENT_ORIGIN=http://localhost:5173
+      - ADMIN_BASIC_USER=admin
+      - ADMIN_BASIC_PASS=change_me
+    volumes:
+      - ./data/admin_db:/app/data
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.admin.rule=Host(`admin.${DOMAIN}`)"
+      - "traefik.http.routers.admin.entrypoints=web"
+      # Uncomment for TLS:
+      # - "traefik.http.routers.admin.entrypoints=websecure"
+      # - "traefik.http.routers.admin.tls.certresolver=le"
+    networks:
+      - game_network
+
+  ai_orchestrator:
+    build: ./services/ai_orchestrator
+    ports:
+      - "8003:8003"
+    environment:
+      - PUBLIC_AI_BASE=http://localhost:8003
+      - PUBLIC_VISION_BASE=http://localhost:8004
+      - VISION_URL=http://vision_selector:8004/match
+      - REDIS_URL=redis://redis:6379
+      - SCENARIO=ai
+      - LLM_ENABLED=1
+      - LLM_MODEL=lmstudio-community/gemma-3-12b-it
+      - GEMINI_API_KEY=AIzaSyDwjs1ZVMGLzXD_xdpACY74hL4aaS1Esbo
+      - LMSTUDIO_URL=http://host.docker.internal:1234/v1
+      - OLLAMA_URL=
+      - SUNO_API_KEY=9726c105cdab4fec9c1942d20ee4aee2
+      - SUNO_API_URL=https://api.suno.ai
+      - MUSIC_CACHE_TTL=3600
+      - WEB_CLIENT_ORIGIN=http://localhost:5173
+      # Image provider switch
+      - IMAGE_PROVIDER=${IMAGE_PROVIDER:-diffusers}
+      - LOCAL_IMAGE_URL=http://host.docker.internal:8501/generate
+      - DIFFUSERS_URL=${DIFFUSERS_URL:-http://image_gen:8502/generate}
+      - GOOGLE_PROJECT=
+      - GOOGLE_LOCATION=us-central1
+      - GOOGLE_IMAGE_MODEL=imagen-3.0
+      - GOOGLE_CREDENTIALS_JSON=
+      - BANANA_API_KEY=
+      - BANANA_URL=
+      - BANANA_MODEL_KEY=
+      # DEMO manifest
+      - DEMO_MODE=0
+      # Dwubiegowy obraz
+      - GS_INTERNAL_BASE=${GS_INTERNAL_BASE:-http://game_server:65432}
+      - ENABLE_BG_IMAGE_SWAP=${ENABLE_BG_IMAGE_SWAP:-1}
+      - ADMIN_TOKEN=dev_admin_token_123
+      - DEMO_ASSETS_PATH=/app/demo_assets/manifest.json
+      # Image generation parameters
+      - IMG_GEN_WIDTH=${IMG_GEN_WIDTH:-640}
+      - IMG_GEN_HEIGHT=${IMG_GEN_HEIGHT:-360}
+      - IMG_GEN_STEPS=${IMG_GEN_STEPS:-4}
+      # SFX
+      - ENABLE_SFX=${ENABLE_SFX:-1}
+      - SFX_BASE=${SFX_BASE:-http://localhost:8003/sfx}
+      - ENABLE_CASEBOARD=${ENABLE_CASEBOARD:-1}
+    volumes:
+      - ./scenarios:/app/scenarios
+      - ./data/music:/app/music
+      - ./data/images:/app/images
+      - ./data/sfx:/app/sfx
+      - ./demo_assets:/app/demo_assets
+      - ./config:/app/config
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      - redis
+      - vision_selector
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ai.rule=Host(`ai.${DOMAIN}`)"
+      - "traefik.http.routers.ai.entrypoints=web"
+    networks:
+      - game_network
+
+  vision_selector:
+    build: ./services/vision_selector
+    ports:
+      - "8004:8004"
+    environment:
+      - PUBLIC_VISION_BASE=http://localhost:8004
+    volumes:
+      - ./data/images:/app/assets/images
+    networks:
+      - game_network
+
+  image_gen:
+    build: ./services/image_gen
+    container_name: noir_image_gen
+    ports:
+      - "8502:8502"
+    environment:
+      - MODEL_ID=stabilityai/sd-turbo
+      - PORT=8502
+      - IMG_GEN_WIDTH=${IMG_GEN_WIDTH:-640}
+      - IMG_GEN_HEIGHT=${IMG_GEN_HEIGHT:-360}
+      - IMG_GEN_STEPS=${IMG_GEN_STEPS:-4}
+    volumes:
+      - ./data/images:/app/out
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    networks:
+      - game_network
+
+  supervisor_service:
+    build: ./services/supervisor_service
+    ports:
+      - "8005:8005"
+    environment:
+      - REDIS_URL=redis://redis:6379
+    depends_on:
+      - redis
+    networks:
+      - game_network
+
+  client:
+    build: ./services/client
+    ports:
+      - "3000:3000"
+    environment:
+      - GAME_SERVER_URL=ws://localhost:65432
+      - PUBLIC_TTS_BASE=http://localhost:8001
+      - PUBLIC_VISION_BASE=http://localhost:8004
+      - PUBLIC_AI_BASE=http://localhost:8003
+    depends_on:
+      - game_server
+    networks:
+      - game_network
+
+networks:
+  game_network:
+    driver: bridge
+
+volumes:
+  redis_data:
+  admin_db_data:
+  audio_data:
+  images_data:

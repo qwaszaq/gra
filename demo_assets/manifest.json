@@ -1,0 +1,26 @@
+{
+  "version": "1.0",
+  "images": {
+    "crime_scene": [
+      "/assets/images/case_zero/turn1.png",
+      "/assets/images/case_zero/turn4.png"
+    ],
+    "alley": [
+      "/assets/images/case_zero/turn2.png",
+      "/assets/images/case_zero/turn5.png"
+    ],
+    "chief_office": [
+      "/assets/images/case_zero/turn3.png",
+      "/assets/images/case_zero/turn6.png"
+    ],
+    "fallback": ["/assets/images/placeholder.png"]
+  },
+  "music": [
+    "/music/track_1.mp3",
+    "/music/track_2.mp3",
+    "/music/track_3.mp3"
+  ],
+  "style": {
+    "prompt_hint": "Sin City black-white with red highlights, film noir, high contrast"
+  }
+}

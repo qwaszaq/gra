@@ -1,0 +1,89 @@
+{
+  "meta": { "style": "black & white high-contrast film noir, film grain, 16:9" },
+  "shots": [
+    {
+      "name": "alley_establishing",
+      "match": { "location": ["alley","street"], "action": ["investigate","follow"], "mood": ["tense","threatening"] },
+      "vision_query": "noir alley at night, rain, red neon",
+      "provider_template": "{STYLE}, wet alley at night, {SUBJECT} implied, {ACTION} suggested, harsh rim light, rain streaks, red accent={MOTIF}, {ANCHOR}"
+    },
+    {
+      "name": "desk_closeup",
+      "match": { "location": ["office","tenement","crime_scene"], "action": ["investigate","connect"] },
+      "vision_query": "detective desk closeup, documents, lamp glare",
+      "provider_template": "{STYLE}, close-up of cluttered detective desk, {IMAGE_HINT}, hard lamp glare, deep shadows, red accent={MOTIF}, {ANCHOR}"
+    },
+    {
+      "name": "face_half_shadow",
+      "match": { "action": ["interrogate"], "subject": ["witness","suspect"], "mood": ["tense","hollow"] },
+      "vision_query": "half-lit face, cigarette ember red",
+      "provider_template": "{STYLE}, half-lit face of {SUBJECT}, cigarette ember glowing red, dramatic chiaroscuro, {ANCHOR}"
+    },
+    {
+      "name": "bar_neon",
+      "match": { "location": ["bar"], "mood": ["melancholic","tense"] },
+      "vision_query": "noir bar neon, smoke, silhouettes",
+      "provider_template": "{STYLE}, bar interior with red neon, smoke haze, silhouettes, {SUBJECT} implied, {ANCHOR}"
+    },
+    {
+      "name": "morgue_coldroom",
+      "match": { "location": ["crime_scene","tenement"], "subject": ["victim"] },
+      "vision_query": "morgue coldroom, sheet, harsh light",
+      "provider_template": "{STYLE}, morgue coldroom, sheet over body, harsh top light, condensation, red accent={MOTIF}, {ANCHOR}"
+    },
+    {
+      "name": "police_office",
+      "match": { "location": ["office"], "subject": ["detective","chief"], "action": ["report","connect"] },
+      "vision_query": "police office, smoke, desk lamp",
+      "provider_template": "{STYLE}, police office, smoke haze, desk lamp glare, {SUBJECT} silhouette, {ANCHOR}"
+    },
+    {
+      "name": "window_rain_reflection",
+      "match": { "mood": ["melancholic"], "action": ["investigate","follow"] },
+      "vision_query": "window rain reflection, neon smear",
+      "provider_template": "{STYLE}, rain on window, city reflection, red neon smear, {ANCHOR}"
+    },
+    {
+      "name": "rooftop_silhouette",
+      "match": { "location": ["rooftop","street"], "action": ["follow"], "mood": ["threatening"] },
+      "vision_query": "rooftop silhouette, city skyline rain",
+      "provider_template": "{STYLE}, city skyline in rain, silhouette on rooftop, trench coat and fedora, red neon distant, {ANCHOR}"
+    },
+    {
+      "name": "corridor_vanish",
+      "match": { "location": ["tenement"], "action": ["follow","interrogate"] },
+      "vision_query": "tenement corridor, vanishing lines, bulb glare",
+      "provider_template": "{STYLE}, narrow tenement corridor, wet floor, vanishing perspective, bulb glare, {ANCHOR}"
+    },
+    {
+      "name": "evidence_table",
+      "match": { "action": ["connect","investigate"], "subject": ["detective"] },
+      "vision_query": "evidence table, strings and notes",
+      "provider_template": "{STYLE}, evidence board/table, strings linking clues, red accent={MOTIF}, {ANCHOR}"
+    },
+    {
+      "name": "mirror_half_face",
+      "match": { "mood": ["hollow","melancholic"], "subject": ["detective","suspect"] },
+      "vision_query": "bathroom mirror, half face, drop trails",
+      "provider_template": "{STYLE}, bathroom mirror half face, drop trails, cigarette smoke, red lipstick smear, {ANCHOR}"
+    },
+    {
+      "name": "bridge_rain",
+      "match": { "location": ["street"], "action": ["follow","report"] },
+      "vision_query": "city bridge in rain, long shadows",
+      "provider_template": "{STYLE}, city bridge in rain, long shadows, slick asphalt, {ANCHOR}"
+    },
+    {
+      "name": "car_drive",
+      "match": { "action": ["move"], "location": ["street"], "subject": ["detective"] },
+      "vision_query": "noir car driving in rain, city streets",
+      "provider_template": "{STYLE}, {SUBJECT} driving car in rain, city streets, wet asphalt, street lights, {TEXT}"
+    },
+    {
+      "name": "freeform_action",
+      "match": { "action": ["freeform"], "location": ["office"], "subject": ["detective"] },
+      "vision_query": "noir scene, detective action",
+      "provider_template": "{STYLE}, {LOCATION} scene, {SUBJECT} {ACTION}, {MOOD} mood, {IMAGE_HINT}, {ANCHOR}, {TEXT}"
+    }
+  ]
+}

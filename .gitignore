@@ -9,4 +9,5 @@ data/admin_logs/
 data/audio/
 data/images/
 data/music/
+data/traefik/acme.json
 # jeśli chcesz trzymać scenariusze w repo, nie ignoruj scenarios/

@@ -1,0 +1,17 @@
+{
+  "subjects": {
+    "detective": "male detective, trench coat, fedora",
+    "witness": "nervous civilian, wet coat",
+    "suspect": "hard profile, scar, cold stare",
+    "victim": "lifeless hand, wristwatch"
+  },
+  "locations": {
+    "office": "cluttered desk, lamp glare",
+    "alley": "wet cobblestone, trash can, red neon reflection",
+    "crime_scene": "blood smear subtle red",
+    "bar": "smoke haze, neon signage",
+    "tenement": "peeling paint, flickering bulb",
+    "street": "puddles, parked sedan",
+    "rooftop": "low parapet, skyline lights"
+  }
+}

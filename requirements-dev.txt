@@ -1,0 +1,43 @@
+# Development dependencies for the game system
+
+# Testing
+pytest==7.4.3
+pytest-asyncio==0.21.1
+pytest-cov==4.1.0
+
+# HTTP Client
+httpx==0.25.2
+
+# WebSocket testing
+websockets==12.0
+
+# Database (sqlite3 is built into Python)
+
+# Redis
+redis==5.0.1
+
+# Environment management
+python-dotenv==1.0.0
+
+# Code quality
+black==23.11.0
+flake8==6.1.0
+mypy==1.7.1
+
+# Development tools
+watchdog==3.0.0
+ipython==8.17.2
+
+# FastAPI and related
+fastapi==0.104.1
+uvicorn[standard]==0.24.0
+pydantic==2.5.0
+
+# WebSocket support
+websockets==12.0
+
+# JSON schema validation
+jsonschema==4.20.0
+
+# Logging
+structlog==23.2.0

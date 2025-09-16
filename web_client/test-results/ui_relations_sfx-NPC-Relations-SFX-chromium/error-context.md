@@ -1,0 +1,64 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e6]:
+    - heading "Partnerzy w Zbrodni - WEB" [level=1] [ref=e7]
+    - generic [ref=e8]:
+      - generic [ref=e9]:
+        - generic [ref=e10]: "WS URL:"
+        - textbox [ref=e11]: ws://localhost:65432/ws
+      - generic [ref=e12]:
+        - generic [ref=e13]: "Kryptonim:"
+        - textbox [ref=e14]: RelSfxUI
+      - generic [ref=e15]:
+        - generic [ref=e16]: "Session ID:"
+        - textbox [ref=e17]: ui-rel-sfx-1
+    - generic [ref=e19]:
+      - generic [ref=e20] [cursor=pointer]:
+        - checkbox "Single Player" [checked] [ref=e21]
+        - text: Single Player
+      - generic [ref=e22] [cursor=pointer]:
+        - checkbox "Muzyka w tle" [checked] [ref=e23]
+        - text: Muzyka w tle
+      - button "Pokaż galerię" [ref=e24] [cursor=pointer]
+      - button "Rozłącz" [ref=e25] [cursor=pointer]
+  - main [ref=e26]:
+    - generic [ref=e27]:
+      - generic [ref=e28]:
+        - 'heading "TURA: 0" [level=2] [ref=e29]'
+        - generic [ref=e30] [cursor=pointer]:
+          - checkbox "Głos narratora" [checked] [ref=e31]
+          - text: Głos narratora
+      - generic [ref=e32]:
+        - generic [ref=e33]: Czekam na narrację...
+        - img "scene" [ref=e35]
+      - generic [ref=e37]:
+        - checkbox "Efekty SFX" [checked] [ref=e38]
+        - text: Efekty SFX
+      - generic [ref=e39]:
+        - generic [ref=e40]: 📍 office
+        - generic [ref=e41]: 🔫 Pusty (0)
+        - generic [ref=e42]: 🚬 0
+      - generic [ref=e43]:
+        - generic [ref=e44]:
+          - text: "🕒 Czas:"
+          - generic [ref=e45]: "20"
+        - generic [ref=e46]:
+          - text: "👁 Podejrzenie:"
+          - generic [ref=e47]: "0"
+        - generic [ref=e48]:
+          - text: "🤝 Reputacja:"
+          - generic [ref=e49]: "0"
+      - generic [ref=e50]:
+        - textbox "Wpisz swoją akcję (np. Przesłuchuję świadka)" [ref=e51]
+        - button "⚛" [active] [ref=e52] [cursor=pointer]
+  - generic [ref=e53]:
+    - heading "Log" [level=3] [ref=e54]
+    - generic [ref=e55]:
+      - generic [ref=e56]: "10:28:59 PM: Rozłączono"
+      - generic [ref=e57]: "10:29:00 PM: Połączono z ws://localhost:65432/ws"
+      - generic [ref=e58]: "10:29:00 PM: INFO: joined session ui-rel-sfx-1, turn 1"
+      - generic [ref=e59]: "10:29:00 PM: ERROR: undefined"
+      - generic [ref=e60]: "10:29:28 PM: ERROR: undefined"
+```

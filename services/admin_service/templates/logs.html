@@ -1,0 +1,142 @@
+{% extends "base.html" %}
+
+{% block title %}Logi - Admin Panel{% endblock %}
+{% block page_title %}Logi Systemu{% endblock %}
+
+{% block content %}
+<!-- Filters -->
+<div class="row mb-4">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-filter"></i>
+                    Filtry
+                </h6>
+            </div>
+            <div class="card-body">
+                <form method="get" class="row g-3">
+                    <div class="col-md-2">
+                        <label for="level" class="form-label">Poziom</label>
+                        <select class="form-select" id="level" name="level">
+                            <option value="">Wszystkie</option>
+                            <option value="info" {% if filters.level == 'info' %}selected{% endif %}>Info</option>
+                            <option value="warning" {% if filters.level == 'warning' %}selected{% endif %}>Warning</option>
+                            <option value="error" {% if filters.level == 'error' %}selected{% endif %}>Error</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label for="service" class="form-label">Serwis</label>
+                        <input type="text" class="form-control" id="service" name="service" value="{{ filters.service or '' }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="session_id" class="form-label">ID Sesji</label>
+                        <input type="text" class="form-control" id="session_id" name="session_id" value="{{ filters.session_id or '' }}">
+                    </div>
+                    <div class="col-md-2">
+                        <label for="hours" class="form-label">Ostatnie (h)</label>
+                        <select class="form-select" id="hours" name="hours">
+                            <option value="1" {% if filters.hours == 1 %}selected{% endif %}>1 godzina</option>
+                            <option value="6" {% if filters.hours == 6 %}selected{% endif %}>6 godzin</option>
+                            <option value="24" {% if filters.hours == 24 %}selected{% endif %}>24 godziny</option>
+                            <option value="168" {% if filters.hours == 168 %}selected{% endif %}>7 dni</option>
+                        </select>
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">&nbsp;</label>
+                        <div>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                                Filtruj
+                            </button>
+                            <a href="/logs" class="btn btn-secondary">
+                                <i class="fas fa-times"></i>
+                                Wyczyść
+                            </a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Logs Table -->
+<div class="row">
+    <div class="col-12">
+        <div class="card shadow">
+            <div class="card-header py-3">
+                <h6 class="m-0 font-weight-bold text-primary">
+                    <i class="fas fa-list"></i>
+                    Logi Systemu
+                </h6>
+            </div>
+            <div class="card-body">
+                {% if logs %}
+                <div class="table-responsive">
+                    <table class="table table-bordered" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Czas</th>
+                                <th>Poziom</th>
+                                <th>Serwis</th>
+                                <th>Wiadomość</th>
+                                <th>Sesja</th>
+                                <th>Gracz</th>
+                                <th>Akcja</th>
+                                <th>Override</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for log in logs %}
+                            <tr>
+                                <td>{{ log.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</td>
+                                <td>
+                                    {% if log.level == 'error' %}
+                                        <span class="badge bg-danger">{{ log.level.upper() }}</span>
+                                    {% elif log.level == 'warning' %}
+                                        <span class="badge bg-warning text-dark">{{ log.level.upper() }}</span>
+                                    {% else %}
+                                        <span class="badge bg-info">{{ log.level.upper() }}</span>
+                                    {% endif %}
+                                </td>
+                                <td>
+                                    <span class="badge bg-secondary">{{ log.service }}</span>
+                                </td>
+                                <td>{{ log.message }}</td>
+                                <td>
+                                    {% if log.session_id %}
+                                        <a href="/sessions/{{ log.session_id }}" class="text-decoration-none">
+                                            {{ log.session_id[:8] }}...
+                                        </a>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                                <td>{{ log.player or 'N/A' }}</td>
+                                <td>{{ log.action or 'N/A' }}</td>
+                                <td>
+                                    {% if log.session_id and log.turn_id %}
+                                        <a href="/ui/override?session_id={{ log.session_id }}&turn={{ log.turn_id }}&text={{ log.message | urlencode }}" class="btn btn-sm btn-warning">
+                                            Override
+                                        </a>
+                                    {% else %}
+                                        N/A
+                                    {% endif %}
+                                </td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                {% else %}
+                <div class="text-center py-4">
+                    <i class="fas fa-inbox fa-3x text-gray-300 mb-3"></i>
+                    <p class="text-muted">Brak logów spełniających kryteria</p>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

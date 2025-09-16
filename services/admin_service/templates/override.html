@@ -1,0 +1,63 @@
+<!doctype html>
+<html>
+<head>
+  <title>Suggest & Override</title>
+  <style>
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 12px; }
+    .card { border: 1px solid #ccc; padding: 8px; border-radius: 6px; }
+    .meta { font-size: 12px; color: #666; }
+    .topbar { margin-bottom: 12px; }
+    img { width: 100%; height: auto; }
+  </style>
+</head>
+<body>
+  <h2>Suggest & Override</h2>
+  <div class="topbar">
+    <form method="get" action="/ui/override">
+      <input type="hidden" name="session_id" value="{{ session_id }}">
+      <input type="hidden" name="turn" value="{{ turn }}">
+      <label>Tekst narracji (dla sugestii):</label><br>
+      <textarea name="text" rows="3" style="width:100%">{{ text }}</textarea><br>
+      <label>k:</label> <input type="number" name="k" value="{{ k or 3 }}" min="1" max="10">
+      <button type="submit">Szukaj propozycji</button>
+    </form>
+  </div>
+
+  {% if suggestions and suggestions.images %}
+  <h3>Propozycje obrazów (k={{ suggestions.images|length }})</h3>
+  <div class="grid">
+    {% for img in suggestions.images %}
+    <div class="card">
+      {% if img.url %}
+        <img src="{{ img.url }}">
+        <div class="meta">{{ img.url }} (score: {{ img.score|round(3) }})</div>
+        <form method="post" action="/ui/override/apply">
+          <input type="hidden" name="session_id" value="{{ session_id }}">
+          <input type="hidden" name="turn" value="{{ turn }}">
+          <input type="hidden" name="image" value="{{ img.url }}">
+          <button type="submit">Użyj tego obrazu</button>
+        </form>
+      {% else %}
+        <img src="{{ vision_base }}{{ img if img.startswith('/assets') else img }}">
+        <div class="meta">{{ img }}</div>
+        <form method="post" action="/ui/override/apply">
+          <input type="hidden" name="session_id" value="{{ session_id }}">
+          <input type="hidden" name="turn" value="{{ turn }}">
+          <input type="hidden" name="image" value="{{ vision_base }}{{ img if img.startswith('/assets') else img }}">
+          <button type="submit">Użyj tego obrazu</button>
+        </form>
+      {% endif %}
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>Brak propozycji – zmień tekst i spróbuj ponownie.</p>
+  {% endif %}
+
+  {% if status %}
+    <p><b>Status:</b> {{ status }}</p>
+  {% endif %}
+
+  <p><a href="/">← Wróć do panelu</a></p>
+</body>
+</html>

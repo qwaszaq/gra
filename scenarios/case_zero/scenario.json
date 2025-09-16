@@ -1,0 +1,37 @@
+{
+  "name": "Case Zero",
+  "description": "Fallback scenario for testing and development",
+  "version": "1.0.0",
+  "turns": [
+    {
+      "turn_id": 1,
+      "narration": "Deszcz pada nad miastem. Dwóch detektywów stoi przed opuszczonym budynkiem. To miejsce zbrodni.",
+      "image": "/assets/images/case_zero/turn1.png"
+    },
+    {
+      "turn_id": 2,
+      "narration": "Wchodzicie do środka. W powietrzu unosi się zapach wilgoci i czegoś jeszcze...",
+      "image": "/assets/images/case_zero/turn2.png"
+    },
+    {
+      "turn_id": 3,
+      "narration": "Na podłodze leży nóż. To może być narzędzie zbrodni.",
+      "image": "/assets/images/case_zero/turn3.png"
+    },
+    {
+      "turn_id": 4,
+      "narration": "W kącie pokoju siedzi świadek. Wygląda na przestraszonego.",
+      "image": "/assets/images/case_zero/turn4.png"
+    },
+    {
+      "turn_id": 5,
+      "narration": "Komendant wchodzi do pokoju. 'Co znaleźliście?' - pyta.",
+      "image": "/assets/images/case_zero/turn5.png"
+    },
+    {
+      "turn_id": 6,
+      "narration": "Czas wrócić na posterunek i złożyć raport z dochodzenia.",
+      "image": "/assets/images/case_zero/turn6.png"
+    }
+  ]
+}

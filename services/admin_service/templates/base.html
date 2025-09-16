@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Admin Panel - Partnerzy w Zbrodni{% endblock %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        .sidebar {
+            min-height: 100vh;
+            background-color: #2c3e50;
+        }
+        .sidebar .nav-link {
+            color: #ecf0f1;
+        }
+        .sidebar .nav-link:hover {
+            color: #3498db;
+        }
+        .sidebar .nav-link.active {
+            color: #3498db;
+            background-color: #34495e;
+        }
+        .main-content {
+            background-color: #f8f9fa;
+        }
+        .log-entry {
+            border-left: 4px solid #dee2e6;
+        }
+        .log-entry.info {
+            border-left-color: #17a2b8;
+        }
+        .log-entry.warning {
+            border-left-color: #ffc107;
+        }
+        .log-entry.error {
+            border-left-color: #dc3545;
+        }
+        .session-card {
+            transition: transform 0.2s;
+        }
+        .session-card:hover {
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <nav class="col-md-3 col-lg-2 d-md-block sidebar collapse">
+                <div class="position-sticky pt-3">
+                    <div class="text-center mb-4">
+                        <h4 class="text-white">
+                            <i class="fas fa-user-secret"></i>
+                            Admin Panel
+                        </h4>
+                        <small class="text-muted">Partnerzy w Zbrodni</small>
+                    </div>
+                    
+                    <ul class="nav flex-column">
+                        <li class="nav-item">
+                            <a class="nav-link {% if request.url.path == '/' %}active{% endif %}" href="/">
+                                <i class="fas fa-tachometer-alt"></i>
+                                Dashboard
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'sessions' in request.url.path %}active{% endif %}" href="/sessions">
+                                <i class="fas fa-users"></i>
+                                Sesje
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if 'logs' in request.url.path %}active{% endif %}" href="/logs">
+                                <i class="fas fa-list"></i>
+                                Logi
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="/report/pdf" target="_blank">
+                                <i class="fas fa-file-pdf"></i>
+                                Raport PDF
+                            </a>
+                        </li>
+                    </ul>
+                    
+                    <hr class="text-white">
+                    
+                    <div class="text-center">
+                        <small class="text-muted">
+                            <i class="fas fa-clock"></i>
+                            <span id="current-time"></span>
+                        </small>
+                    </div>
+                </div>
+            </nav>
+
+            <!-- Main content -->
+            <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 main-content">
+                <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+                    <h1 class="h2">{% block page_title %}Dashboard{% endblock %}</h1>
+                    <div class="btn-toolbar mb-2 mb-md-0">
+                        <div class="btn-group me-2">
+                            <button type="button" class="btn btn-sm btn-outline-secondary" onclick="location.reload()">
+                                <i class="fas fa-sync-alt"></i>
+                                Odśwież
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                {% block content %}{% endblock %}
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Update current time
+        function updateTime() {
+            const now = new Date();
+            document.getElementById('current-time').textContent = now.toLocaleString('pl-PL');
+        }
+        updateTime();
+        setInterval(updateTime, 1000);
+        
+        // Auto-refresh every 30 seconds
+        setTimeout(() => {
+            location.reload();
+        }, 30000);
+    </script>
+</body>
+</html>
